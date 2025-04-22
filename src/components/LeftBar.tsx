@@ -1,6 +1,6 @@
-import Image from "next/image";
 import Link from "next/link";
 import React from "react";
+import Image from "./Image";
 
 const menuList = [
   {
@@ -72,21 +72,21 @@ export const LeftBar = () => {
       <div className="flex flex-col items-center xxl:items-start gap-4 text-lg ">
         {/* LOGO */}
         <Link href="/" className="p-2 rounded-full hover:bg-[#181818]">
-          <Image src="/icons/logo.svg" alt="" width={24} height={24} />
+          <Image path="/icons/logo.svg" alt="" w={24} h={24} />
         </Link>
         {/* MENU LIST */}
         <div className="flex flex-col gap-4">
           {menuList.map((menuItem) => (
             <Link
               href={menuItem.link}
-              id={JSON.stringify(menuItem.id)}
+              key={menuItem.id}
               className="flex items-center gap-4 p-2 rounded-full hover:bg-[#181818]"
             >
               <Image
-                src={`/icons/${menuItem.icon}`}
+                path={`/icons/${menuItem.icon}`}
                 alt={menuItem.name}
-                width={24}
-                height={24}
+                w={24}
+                h={24}
               />
               <span className="xxl:inline hidden">{menuItem.name}</span>
             </Link>
@@ -99,19 +99,21 @@ export const LeftBar = () => {
         >
           <Image
             className="xxl:hidden block"
-            src="/icons/post.svg"
+            path="/icons/post.svg"
             alt="new_post"
-            width={24}
-            height={24}
+            w={24}
+            h={24}
           />
-          <span className="xxl:block hidden text-black font-bold py-3 px-20">Post</span>
+          <span className="xxl:block hidden text-black font-bold py-3 px-20">
+            Post
+          </span>
         </Link>
       </div>
       {/* USER */}
       <div className="flex items-center justify-between">
         <div className="flex items-center gap-2">
           <div className="w-10 h-10 relative rounded-full overflow-hidden">
-            <Image src="/tmp/avatar.png" alt="avatar" fill />
+            <Image path="/test/avatar.png" alt="avatar" w={400} h={400} tr={true} />
           </div>
           <div className="xxl:flex hidden flex-col">
             <span className="font-bold">Dang Pham</span>
