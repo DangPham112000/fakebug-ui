@@ -2,6 +2,7 @@ import React from "react";
 import Image from "./Image";
 import { PostMoreAction } from "./PostMoreAction";
 import { PostInteraction } from "./PostInteraction";
+import { Avatar } from "./Avatar";
 
 export const Post = () => {
   return (
@@ -25,9 +26,7 @@ export const Post = () => {
       {/* Post */}
       <div className="flex gap-4">
         {/* Avatar */}
-        <div className="w-10 h-10 rounded-full overflow-hidden">
-          <Image path="/test/avatar.png" w={100} h={100} tr={true} alt="" />
-        </div>
+        <Avatar />
         {/* Content */}
         <div className="flex-1 flex flex-col gap-2">
           {/* Head */}

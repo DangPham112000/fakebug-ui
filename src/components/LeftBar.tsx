@@ -1,6 +1,7 @@
 import Link from "next/link";
 import React from "react";
 import Image from "./Image";
+import { Avatar } from "./Avatar";
 
 const menuList = [
   {
@@ -112,9 +113,7 @@ export const LeftBar = () => {
       {/* USER */}
       <div className="flex items-center justify-between">
         <div className="flex items-center gap-2">
-          <div className="w-10 h-10 relative rounded-full overflow-hidden">
-            <Image path="/test/avatar.png" alt="avatar" w={400} h={400} tr={true} />
-          </div>
+          <Avatar />
           <div className="xxl:flex hidden flex-col">
             <span className="font-bold">Dang Pham</span>
             <span className="text-sm text-textGray">@Dante__hehe</span>
