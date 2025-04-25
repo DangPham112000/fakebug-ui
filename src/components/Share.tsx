@@ -14,11 +14,20 @@ import {
 } from "@imagekit/next";
 import { ImageEditor } from "./ImageEditor";
 
+export type ImageSettingsType = {
+  type: "original" | "wide" | "square";
+  sensitive: boolean;
+};
+
 export const Share = () => {
   const [media, setMedia] = useState<File | null>(null);
   const previewImageUrl = media ? URL.createObjectURL(media) : null;
 
   const [isEditorOpen, setIsEditorOpen] = useState<boolean>(false);
+  const [imageSettings, setImageSettings] = useState<ImageSettingsType>({
+    type: "original",
+    sensitive: false,
+  });
 
   const formRef = useRef<HTMLFormElement>(null);
 
@@ -46,6 +55,14 @@ export const Share = () => {
     }
     const { signature, expire, token, publicKey } = authParams;
 
+    const transformation = `w-600, ${
+      imageSettings.type === "square"
+        ? "ar-1-1"
+        : imageSettings.type === "wide"
+        ? "ar-16-9"
+        : ""
+    }`;
+
     try {
       const uploadResponse = await upload({
         // Authentication parameters
@@ -56,6 +73,12 @@ export const Share = () => {
         file: media,
         fileName: media.name, // Optionally set a custom file name
         folder: "/posts",
+        transformation: {
+          pre: transformation,
+        },
+        customMetadata: {
+          sensitive: imageSettings.sensitive
+        },
         // Abort signal to allow cancellation of the upload if needed.
         abortSignal: abortController.signal,
       });
@@ -105,22 +128,42 @@ export const Share = () => {
         {/* Preview Image */}
         {previewImageUrl && (
           <div className="relative rounded-xl overflow-hidden">
-            <NextImage src={previewImageUrl} alt="" width={600} height={600} />
-            <div className="absolute top-2 left-2 bg-black hover:bg-black/50 text-white py-1 px-4 rounded-full font-bold text-sm cursor-pointer"
+            <NextImage
+              src={previewImageUrl}
+              alt=""
+              width={600}
+              height={600}
+              className={`w-full ${
+                imageSettings.type === "original"
+                  ? "h-full object-contain"
+                  : imageSettings.type === "square"
+                  ? "aspect-square h-auto object-cover"
+                  : "aspect-video h-auto object-cover"
+              }`}
+            />
+            <button
+              type="button"
+              className="absolute top-2 left-2 bg-black hover:bg-black/50 text-white py-1 px-4 rounded-full font-bold text-sm cursor-pointer"
               onClick={() => setIsEditorOpen(true)}
             >
               Edit
-            </div>
-            <div
+            </button>
+            <button
+              type="button"
               className="absolute top-2 right-2 bg-black hover:bg-black/50 text-white p-1 px-2 rounded-full font-bold text-sm cursor-pointer"
               onClick={unloadImage}
             >
               x
-            </div>
+            </button>
           </div>
         )}
         {isEditorOpen && previewImageUrl && (
-          <ImageEditor setIsEditorOpen={setIsEditorOpen} />
+          <ImageEditor
+            onClose={() => setIsEditorOpen(false)}
+            imageSettings={imageSettings}
+            setImageSettings={setImageSettings}
+            previewImageUrl={previewImageUrl}
+          />
         )}
         {/* Upload Thing Buttons */}
         <div className="flex items-center justify-between gap-4 flex-wrap">
