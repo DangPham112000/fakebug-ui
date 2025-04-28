@@ -1,10 +1,18 @@
-import React from "react";
 import Image from "./Image";
 import { PostMoreAction } from "./PostMoreAction";
 import { PostInteraction } from "./PostInteraction";
 import { Avatar } from "./Avatar";
+import imagekitGetFileDetails from "@/serverHelpers/imagekitGetFileDetails";
 
-export const Post = () => {
+export const Post = async () => {
+  let fileDetails;
+  try {
+    fileDetails = await imagekitGetFileDetails("680f26ce432c476416398736");
+    console.log("fileDetails", fileDetails);
+  } catch (error) {
+    console.log("Can not fetch image from Imagekit", error);
+  }
+
   return (
     <div className="p-4 border-y-[1px] border-borderGray">
       {/* Post Type */}
@@ -45,7 +53,15 @@ export const Post = () => {
             quo deleniti mollitia. Laborum maxime quasi quis facere illum quia
             fugiat!
           </p>
-          <Image path="/test/post.jpeg" w={600} h={600} alt="" />
+          {fileDetails && (
+            <Image
+              path={fileDetails.filePath}
+              w={fileDetails.width}
+              h={fileDetails.height}
+              className={fileDetails.customMetadata?.sensitive ? "blur-lg" : ""}
+              alt=""
+            />
+          )}
           <PostInteraction />
         </div>
       </div>

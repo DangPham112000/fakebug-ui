@@ -1,10 +1,11 @@
 "use client";
+
 import React, { useRef, useState } from "react";
 import { Avatar } from "./Avatar";
 import Image from "./Image";
 import NextImage from "next/image";
 import { shareAction } from "@/actions";
-import imageKitAuthenticator from "@/clientHelpers/imageKitAuthenticator";
+import imagekitAuthenticator from "@/clientHelpers/imagekitAuthenticator";
 import {
   ImageKitAbortError,
   ImageKitInvalidRequestError,
@@ -21,7 +22,7 @@ export type ImageSettingsType = {
 
 export const Share = () => {
   const [media, setMedia] = useState<File | null>(null);
-  const previewImageUrl = media ? URL.createObjectURL(media) : null;
+  const previewMediaUrl = media ? URL.createObjectURL(media) : null;
 
   const [isEditorOpen, setIsEditorOpen] = useState<boolean>(false);
   const [imageSettings, setImageSettings] = useState<ImageSettingsType>({
@@ -48,14 +49,14 @@ export const Share = () => {
 
     let authParams;
     try {
-      authParams = await imageKitAuthenticator();
+      authParams = await imagekitAuthenticator();
     } catch (authError) {
       console.error("Failed to authenticate for upload:", authError);
       return;
     }
     const { signature, expire, token, publicKey } = authParams;
 
-    const transformation = `w-600, ${
+    const transformation = `w-600,${
       imageSettings.type === "square"
         ? "ar-1-1"
         : imageSettings.type === "wide"
@@ -73,11 +74,13 @@ export const Share = () => {
         file: media,
         fileName: media.name, // Optionally set a custom file name
         folder: "/posts",
-        transformation: {
-          pre: transformation,
-        },
+        ...(media.type.includes("image") && {
+          transformation: {
+            pre: transformation,
+          },
+        }),
         customMetadata: {
-          sensitive: imageSettings.sensitive
+          sensitive: imageSettings.sensitive,
         },
         // Abort signal to allow cancellation of the upload if needed.
         abortSignal: abortController.signal,
@@ -126,10 +129,10 @@ export const Share = () => {
           placeholder="What's happening?"
         />
         {/* Preview Image */}
-        {previewImageUrl && (
+        {media?.type.includes("image") && previewMediaUrl && (
           <div className="relative rounded-xl overflow-hidden">
             <NextImage
-              src={previewImageUrl}
+              src={previewMediaUrl}
               alt=""
               width={600}
               height={600}
@@ -150,19 +153,31 @@ export const Share = () => {
             </button>
             <button
               type="button"
-              className="absolute top-2 right-2 bg-black hover:bg-black/50 text-white p-1 px-2 rounded-full font-bold text-sm cursor-pointer"
+              className="absolute top-2 right-2 rounded-full h-8 w-8 bg-black/50 text-white cursor-pointer flex items-center justify-center font-bold text-sm"
               onClick={unloadImage}
             >
               x
             </button>
           </div>
         )}
-        {isEditorOpen && previewImageUrl && (
+        {media?.type.includes("video") && previewMediaUrl && (
+          <div className="relative">
+            <video src={previewMediaUrl} controls />
+            <button
+              type="button"
+              className="absolute top-2 right-2 rounded-full h-8 w-8 bg-black/50 text-white cursor-pointer flex items-center justify-center font-bold text-sm"
+              onClick={() => setMedia(null)}
+            >
+              X
+            </button>
+          </div>
+        )}
+        {isEditorOpen && previewMediaUrl && (
           <ImageEditor
             onClose={() => setIsEditorOpen(false)}
             imageSettings={imageSettings}
             setImageSettings={setImageSettings}
-            previewImageUrl={previewImageUrl}
+            previewImageUrl={previewMediaUrl}
           />
         )}
         {/* Upload Thing Buttons */}
@@ -173,6 +188,7 @@ export const Share = () => {
               onChange={loadImage}
               className="hidden"
               id="file"
+              accept="image/*,video/*"
             />
             <label htmlFor="file">
               <Image
