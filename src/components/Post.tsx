@@ -3,12 +3,12 @@ import { PostMoreAction } from "./PostMoreAction";
 import { PostInteraction } from "./PostInteraction";
 import { Avatar } from "./Avatar";
 import imagekitGetFileDetails from "@/serverHelpers/imagekitGetFileDetails";
+import Video from "./Video";
 
 export const Post = async () => {
   let fileDetails;
   try {
-    fileDetails = await imagekitGetFileDetails("680f26ce432c476416398736");
-    console.log("fileDetails", fileDetails);
+    fileDetails = await imagekitGetFileDetails("680f431a432c47641627ab35");
   } catch (error) {
     console.log("Can not fetch image from Imagekit", error);
   }
@@ -53,15 +53,25 @@ export const Post = async () => {
             quo deleniti mollitia. Laborum maxime quasi quis facere illum quia
             fugiat!
           </p>
-          {fileDetails && (
-            <Image
-              path={fileDetails.filePath}
-              w={fileDetails.width}
-              h={fileDetails.height}
-              className={fileDetails.customMetadata?.sensitive ? "blur-lg" : ""}
-              alt=""
-            />
-          )}
+          {fileDetails &&
+            (fileDetails.fileType === "image" ? (
+              <Image
+                path={fileDetails.filePath}
+                w={fileDetails.width}
+                h={fileDetails.height}
+                className={
+                  fileDetails.customMetadata?.sensitive ? "blur-lg" : ""
+                }
+                alt=""
+              />
+            ) : (
+              <Video
+                path={fileDetails?.filePath}
+                className={
+                  fileDetails.customMetadata?.sensitive ? "blur-lg" : ""
+                }
+              />
+            ))}
           <PostInteraction />
         </div>
       </div>
