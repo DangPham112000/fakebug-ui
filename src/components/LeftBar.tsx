@@ -55,7 +55,7 @@ const menuList = [
   {
     id: 9,
     name: "Profile",
-    link: "/",
+    link: "/dan",
     icon: "profile.svg",
   },
   {
@@ -95,7 +95,7 @@ export const LeftBar = () => {
         </div>
         {/* BUTTON */}
         <Link
-          href="/"
+          href="/compose/post"
           className="flex justify-center items-center bg-white rounded-full xxl:w-auto w-12 xxl:h-auto h-12"
         >
           <Image

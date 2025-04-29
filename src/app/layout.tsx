@@ -4,8 +4,10 @@ import { LeftBar } from "@/components/LeftBar";
 
 export default function RootLayout({
   children,
+  modal,
 }: Readonly<{
   children: React.ReactNode;
+  modal: React.ReactNode;
 }>) {
   return (
     <html lang="en">
@@ -18,6 +20,7 @@ export default function RootLayout({
           {/* bg-blue-200 */}
           <div className="flex-1 lg:min-w-[600px] border-x-[1px] border-borderGray">
             {children}
+            {modal}
           </div>
           {/* bg-green-200 */}
           <div className="flex-1 lg:flex hidden md:ml-8 ml-4">
