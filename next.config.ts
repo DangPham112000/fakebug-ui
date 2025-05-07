@@ -11,6 +11,10 @@ const nextConfig: NextConfig = {
       },
     ],
   },
+  // Set a custom port for the application
+  serverRuntimeConfig: {
+    port: 4000, // Custom port
+  },
 };
 
 export default nextConfig;
