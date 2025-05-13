@@ -1,4 +1,5 @@
 import Image from '@/components/Image';
+import Link from 'next/link';
 import React from 'react';
 
 const SignInPage = () => {
@@ -15,14 +16,26 @@ const SignInPage = () => {
         <div className="flex flex-col gap-4">
           {/* Login with credentials */}
 
-          <button
-            type="button"
-            className="w-72 flex items-center justify-center gap-2 p-2 rounded-full bg-black text-white font-bold cursor-pointer border-[1px] border-white hover:bg-white hover:text-black"
-          >
-            Sign in
-          </button>
+          <form action="" className="flex flex-col gap-4 ">
+            <input
+              type="text"
+              className="w-72 flex items-center justify-center gap-2 py-2 px-4 rounded-full bg-white text-black cursor-pointer border-[1px] border-white"
+              placeholder="Enter a username"
+            />
+            <input
+              type="text"
+              className="w-72 flex items-center justify-center gap-2 py-2 px-4 rounded-full bg-white text-black cursor-pointer border-[1px] border-white"
+              placeholder="Enter a password"
+            />
+            <button
+              type="submit"
+              className="w-72 flex items-center justify-center gap-2 py-2 px-4 rounded-full bg-black text-white font-bold cursor-pointer border-[1px] border-white hover:bg-white hover:text-black"
+            >
+              Sign in
+            </button>
+          </form>
 
-          <span className="text-textGray">Other log in options</span>
+          <span className="text-textGray">Other sign in options</span>
 
           <button
             type="button"
@@ -78,6 +91,16 @@ const SignInPage = () => {
             </svg>
             Sign in with Github
           </button>
+
+          <span className="text-textGray mt-10">Already have an account?</span>
+          <Link href="/sign-up">
+            <button
+              type="button"
+              className="w-72 flex items-center justify-center gap-2 p-2 rounded-full bg-white text-black font-bold cursor-pointer border-[1px] border-white"
+            >
+              Sign up
+            </button>
+          </Link>
         </div>
       </div>
     </div>
