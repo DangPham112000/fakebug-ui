@@ -1,8 +1,42 @@
+'use client';
+import { authenticateUser } from '@/api/authService';
 import Image from '@/components/Image';
 import Link from 'next/link';
-import React from 'react';
+import { useRouter } from 'next/navigation';
+import React, { useState } from 'react';
 
 const SignInPage = () => {
+  const router = useRouter();
+  const [error, setError] = useState('');
+
+  const loginAction = async (formData: FormData) => {
+    try {
+      const username = formData.get('username') as string;
+      const password = formData.get('password') as string;
+
+      if (!username || !password) {
+        setError('All fields are required');
+        return;
+      }
+
+      const accessToken = await authenticateUser({ username, password });
+      if (accessToken) {
+        // Set token in cookie for middleware authentication
+        document.cookie = `token=${accessToken}; path=/; max-age=${
+          60 * 60 * 24 * 7
+        }`; // 7 days
+
+        // Redirect to homepage
+        router.push('/');
+      } else {
+        setError('Login failed. Please try again.');
+      }
+    } catch (error) {
+      console.log('loginAction err: ', error);
+      setError('Login failed. Please try again.');
+    }
+  };
+
   return (
     <div className="h-screen flex items-center justify-between p-8">
       <div className="w-1/2 lg:flex hidden items-center justify-center">
@@ -13,19 +47,26 @@ const SignInPage = () => {
           Happening now
         </h1>
         <h1 className="text-2xl">Join today.</h1>
+
+        {error && <p className="text-red-500">{error}</p>}
+
         <div className="flex flex-col gap-4">
           {/* Login with credentials */}
 
-          <form action="" className="flex flex-col gap-4 ">
+          <form action={loginAction} className="flex flex-col gap-4 ">
             <input
               type="text"
-              className="w-72 flex items-center justify-center gap-2 py-2 px-4 rounded-full bg-white text-black cursor-pointer border-[1px] border-white"
+              name="username"
+              className="w-72 flex items-center justify-center gap-2 py-2 px-4 rounded-full bg-white text-black cursor-text border-[1px] border-white"
               placeholder="Enter a username"
+              required
             />
             <input
-              type="text"
-              className="w-72 flex items-center justify-center gap-2 py-2 px-4 rounded-full bg-white text-black cursor-pointer border-[1px] border-white"
+              type="password"
+              name="password"
+              className="w-72 flex items-center justify-center gap-2 py-2 px-4 rounded-full bg-white text-black cursor-text border-[1px] border-white"
               placeholder="Enter a password"
+              required
             />
             <button
               type="submit"

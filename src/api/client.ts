@@ -12,6 +12,10 @@ apiClient.interceptors.response.use(
   (response) => response,
   (error) => {
     // Handle global errors (auth, server down, etc.)
+    if (!error.response) {
+      // Server down
+      return Promise.reject(error);
+    }
     if (error.response.status === 401) {
       // Redirect to login
     }
@@ -20,7 +24,7 @@ apiClient.interceptors.response.use(
 );
 
 apiClient.interceptors.request.use((config) => {
-  const token = localStorage.getItem('token');
+  const token = localStorage.getItem('accessToken');
   if (token) {
     config.headers.Authorization = `Bearer ${token}`;
   }

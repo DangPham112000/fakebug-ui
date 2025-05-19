@@ -12,7 +12,9 @@ export default async function middleware(req: NextRequest) {
   );
 
   // Get auth token from cookies or headers
-  const token = req.headers.get('Authorization')?.split(' ')[1];
+  const token =
+    req.headers.get('Authorization')?.split(' ')[1] ||
+    req.cookies.get('token')?.value;
 
   // Redirect to sign-in if accessing protected route without authentication
   if (isProtectedRoute && !token) {
