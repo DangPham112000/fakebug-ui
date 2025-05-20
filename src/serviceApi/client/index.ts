@@ -1,3 +1,5 @@
+'use client';
+import { clearToken, getClientToken } from '@/helpers/client/tokenManagement';
 import axios from 'axios';
 
 const apiClient = axios.create({
@@ -18,13 +20,16 @@ apiClient.interceptors.response.use(
     }
     if (error.response.status === 401) {
       // Redirect to login
+      clearToken();
+      window.location.href = '/sign-in';
+      return Promise.reject(error);
     }
     return Promise.reject(error);
   },
 );
 
 apiClient.interceptors.request.use((config) => {
-  const token = localStorage.getItem('accessToken');
+  const token = getClientToken();
   if (token) {
     config.headers.Authorization = `Bearer ${token}`;
   }

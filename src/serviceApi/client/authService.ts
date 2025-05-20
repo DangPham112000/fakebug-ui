@@ -1,5 +1,6 @@
 'use client';
-import apiClient from './client';
+import apiClient from '.';
+import { setToken } from '@/helpers/client/tokenManagement';
 
 export const authenticateUser = async ({
   username,
@@ -15,13 +16,9 @@ export const authenticateUser = async ({
     });
     const { accessToken, refreshToken } = response.data;
 
-    localStorage.setItem('accessToken', accessToken);
+    // Store tokens using our utility
     localStorage.setItem('refreshToken', refreshToken);
-
-    // Also set token in cookie for middleware authentication
-    document.cookie = `token=${accessToken}; path=/; max-age=${
-      60 * 60 * 24 * 7
-    }`; // 7 days
+    setToken(accessToken);
 
     return accessToken;
   } catch (error) {
@@ -47,13 +44,9 @@ export const registerUser = async ({
     });
     const { accessToken, refreshToken } = response.data;
 
-    localStorage.setItem('accessToken', accessToken);
+    // Store tokens using our utility
     localStorage.setItem('refreshToken', refreshToken);
-
-    // Also set token in cookie for middleware authentication
-    document.cookie = `token=${accessToken}; path=/; max-age=${
-      60 * 60 * 24 * 7
-    }`; // 7 days
+    setToken(accessToken);
 
     return accessToken;
   } catch (error) {

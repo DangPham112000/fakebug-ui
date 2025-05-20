@@ -5,7 +5,7 @@ import { Avatar } from "./Avatar";
 import Image from "./Image";
 import NextImage from "next/image";
 import { shareAction } from "@/actions";
-import imagekitAuthenticator from "@/clientHelpers/imagekitAuthenticator";
+import imagekitAuthenticator from "@/helpers/client/imagekitAuthenticator";
 import {
   ImageKitAbortError,
   ImageKitInvalidRequestError,

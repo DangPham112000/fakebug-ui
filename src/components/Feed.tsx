@@ -1,13 +1,23 @@
-import React from "react";
-import { Post } from "./Post";
+import React from 'react';
+import { Post } from './Post';
+import { serverfetchPosts } from '@/serviceApi/server/postService';
+import ErrorBoundary from './ErrorBoundary';
 
-export const Feed = () => {
+export const Feed = async () => {
+  let posts = await serverfetchPosts();
+
   return (
     <div>
-      <Post />
-      <Post />
-      <Post />
-      <Post />
+      {posts && posts.length > 0 ? (
+        posts.map((post: any) => (
+          <div key={post.id}>
+            <Post />
+            {/* <Post post={post} /> */}
+          </div>
+        ))
+      ) : (
+        <ErrorBoundary error={new Error('No posts found')} />
+      )}
     </div>
   );
 };

@@ -1,5 +1,5 @@
 'use client';
-import { registerUser } from '@/api/authService';
+import { registerUser } from '@/serviceApi/client/authService';
 import Image from '@/components/Image';
 import Link from 'next/link';
 import { useRouter } from 'next/navigation';

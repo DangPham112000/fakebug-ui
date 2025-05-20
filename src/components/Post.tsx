@@ -1,19 +1,15 @@
-import Image from "./Image";
-import { PostMoreAction } from "./PostMoreAction";
-import { PostInteraction } from "./PostInteraction";
-import { Avatar } from "./Avatar";
-import imagekitGetFileDetails from "@/serverHelpers/imagekitGetFileDetails";
-import Video from "./Video";
-import Link from "next/link";
+import Image from './Image';
+import { PostMoreAction } from './PostMoreAction';
+import { PostInteraction } from './PostInteraction';
+import { Avatar } from './Avatar';
+import imagekitGetFileDetails from '@/helpers/server/imagekitGetFileDetails';
+import Video from './Video';
+import Link from 'next/link';
 
-export const Post = async ({ type }: { type?: "status" | "comment" }) => {
-  let fileDetails;
-  const isStatusPost = type === "status";
-  try {
-    fileDetails = await imagekitGetFileDetails("680f431a432c47641627ab35");
-  } catch (error) {
-    console.log("Can not fetch image from Imagekit", error);
-  }
+export const Post = async ({ type }: { type?: 'status' | 'comment' }) => {
+  const post = {};
+  let fileDetails = await imagekitGetFileDetails('680f431a432c47641627ab35');
+  const isStatusPost = type === 'status';
 
   return (
     <div className="p-4 border-y-[1px] border-borderGray">
@@ -37,21 +33,22 @@ export const Post = async ({ type }: { type?: "status" | "comment" }) => {
       <div className="flex gap-4">
         {/* Avatar */}
         {!isStatusPost && <Avatar />}
+
         {/* Content */}
         <div className="flex-1 flex flex-col gap-2">
           {/* Head */}
           <div className="w-full flex justify-between">
-            <Link href={"/webdev"} className="flex items-center gap-4">
+            <Link href={'/webdev'} className="flex items-center gap-4">
               {isStatusPost && <Avatar />}
               <div
                 className={`flex flex-wrap ${
                   isStatusPost
-                    ? "flex-col gap-0 items-start"
-                    : "items-center gap-2"
+                    ? 'flex-col gap-0 items-start'
+                    : 'items-center gap-2'
                 }`}
               >
                 <h1 className="text-md font-bold">Dang Pham</h1>
-                <span className={`text-textGray ${isStatusPost && "text-sm"}`}>
+                <span className={`text-textGray ${isStatusPost && 'text-sm'}`}>
                   @dantehehe
                 </span>
                 {!isStatusPost && <span className="text-textGray">24h</span>}
@@ -59,23 +56,25 @@ export const Post = async ({ type }: { type?: "status" | "comment" }) => {
             </Link>
             <PostMoreAction />
           </div>
+
           {/* Text & Media */}
-          <Link href={"/webdev/status/123"}>
-            <p className={`${isStatusPost && "text-lg"}`}>
+          <Link href={'/webdev/status/123'}>
+            <p className={`${isStatusPost && 'text-lg'}`}>
               Lorem ipsum dolor sit amet consectetur adipisicing elit. Ad
               officiis sed commodi quasi numquam, est nulla consequatur
               perferendis aliquam quo deleniti mollitia. Laborum maxime quasi
               quis facere illum quia fugiat!
             </p>
           </Link>
+
           {fileDetails &&
-            (fileDetails.fileType === "image" ? (
+            (fileDetails.fileType === 'image' ? (
               <Image
                 path={fileDetails.filePath}
                 w={fileDetails.width}
                 h={fileDetails.height}
                 className={
-                  fileDetails.customMetadata?.sensitive ? "blur-lg" : ""
+                  fileDetails.customMetadata?.sensitive ? 'blur-lg' : ''
                 }
                 alt=""
               />
@@ -83,13 +82,15 @@ export const Post = async ({ type }: { type?: "status" | "comment" }) => {
               <Video
                 path={fileDetails?.filePath}
                 className={
-                  fileDetails.customMetadata?.sensitive ? "blur-lg" : ""
+                  fileDetails.customMetadata?.sensitive ? 'blur-lg' : ''
                 }
               />
             ))}
+
           {isStatusPost && (
             <span className="text-textGray">12:01 PM · Apr 29, 2025</span>
           )}
+
           <PostInteraction />
         </div>
       </div>
