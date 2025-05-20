@@ -21,6 +21,14 @@ export default async function middleware(req: NextRequest) {
     return NextResponse.redirect(new URL('/sign-in', req.nextUrl));
   }
 
+  // Redirect to homepage if accessing public route while authenticated
+  const isPublicRoute = publicRoutes.some(
+    (route) => path === route || path.startsWith(`${route}/`),
+  );
+  if (isPublicRoute && token) {
+    return NextResponse.redirect(new URL('/', req.nextUrl));
+  }
+
   return NextResponse.next();
 }
 
