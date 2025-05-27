@@ -3,8 +3,12 @@ import { Post } from './Post';
 import { serverfetchPosts } from '@/serviceApi/server/postService';
 import ErrorBoundary from './ErrorBoundary';
 
-export const Feed = async () => {
-  let posts = await serverfetchPosts();
+type Props = {
+  username?: string;
+};
+
+export const Feed = async ({ username }: Props) => {
+  let posts = await serverfetchPosts(username);
 
   return (
     <div>

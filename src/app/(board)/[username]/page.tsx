@@ -1,14 +1,27 @@
-import { Feed } from "@/components/Feed";
-import Image from "@/components/Image";
-import Link from "next/link";
-import React from "react";
+import ErrorBoundary from '@/components/ErrorBoundary';
+import { Feed } from '@/components/Feed';
+import Image from '@/components/Image';
+import { serverfetchUser } from '@/serviceApi/server/userService';
+import Link from 'next/link';
+import React from 'react';
 
-const UserPage = () => {
+type Props = {
+  params: Promise<{
+    username: string;
+  }>;
+};
+
+const UserPage = async ({ params }: Props) => {
+  const { username } = await params;
+
+  const user = await serverfetchUser(username);
+  if (!user) return <ErrorBoundary error={new Error('No user found')} />;
+
   return (
     <div className="">
       {/* Profile Title */}
       <div className="flex items-center gap-8 sticky top-0 backdrop-blur-md p-4 z-10 bg-[#00000084]">
-        <Link href={"/"}>
+        <Link href={'/'}>
           <Image path="icons/back.svg" alt="back" w={24} h={24} />
         </Link>
         <h1 className="font-bold text-lg">Dang Pham</h1>
@@ -87,7 +100,7 @@ const UserPage = () => {
         </div>
       </div>
       {/* Feeds */}
-      <Feed />
+      <Feed username={username} />
     </div>
   );
 };
