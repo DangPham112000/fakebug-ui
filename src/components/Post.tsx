@@ -17,6 +17,8 @@ export const Post = ({ type, post }: Props) => {
 
   const originalPost = post?.rePostId ? post?.rePost : post;
 
+  console.log(originalPost);
+
   return (
     <div className="p-4 border-y-[1px] border-borderGray">
       {/* Repost */}
@@ -105,7 +107,13 @@ export const Post = ({ type, post }: Props) => {
             <span className="text-textGray">{originalPost?.createdAt}</span>
           )}
 
-          <PostInteraction count={originalPost?._count} />
+          <PostInteraction
+            count={originalPost?._count}
+            isLiked={originalPost?.likes.length !== 0 ? true : false}
+            isReposted={originalPost?.rePosts.length !== 0 ? true : false}
+            isCommented={originalPost?.comments.length !== 0 ? true : false}
+            isSaved={originalPost?.saves.length !== 0 ? true : false}
+          />
         </div>
       </div>
     </div>
