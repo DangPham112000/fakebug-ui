@@ -1,72 +1,77 @@
-import Link from "next/link";
-import React from "react";
-import Image from "./Image";
-import { Avatar } from "./Avatar";
+import Link from 'next/link';
+import React from 'react';
+import Image from './Image';
+import { Avatar } from './Avatar';
+import { serverGetCurrentUser } from '@/serviceApi/server/userService';
 
 const menuList = [
   {
     id: 1,
-    name: "Homepage",
-    link: "/",
-    icon: "home.svg",
+    name: 'Homepage',
+    link: '/',
+    icon: 'home.svg',
   },
   {
     id: 2,
-    name: "Explore",
-    link: "/",
-    icon: "explore.svg",
+    name: 'Explore',
+    link: '/',
+    icon: 'explore.svg',
   },
   {
     id: 3,
-    name: "Notification",
-    link: "/",
-    icon: "notification.svg",
+    name: 'Notification',
+    link: '/',
+    icon: 'notification.svg',
   },
   {
     id: 4,
-    name: "Messages",
-    link: "/",
-    icon: "message.svg",
+    name: 'Messages',
+    link: '/',
+    icon: 'message.svg',
   },
   {
     id: 5,
-    name: "Bookmarks",
-    link: "/",
-    icon: "bookmark.svg",
+    name: 'Bookmarks',
+    link: '/',
+    icon: 'bookmark.svg',
   },
   {
     id: 6,
-    name: "Jobs",
-    link: "/",
-    icon: "job.svg",
+    name: 'Jobs',
+    link: '/',
+    icon: 'job.svg',
   },
   {
     id: 7,
-    name: "Communities",
-    link: "/",
-    icon: "community.svg",
+    name: 'Communities',
+    link: '/',
+    icon: 'community.svg',
   },
   {
     id: 8,
-    name: "Premium",
-    link: "/",
-    icon: "logo.svg",
+    name: 'Premium',
+    link: '/',
+    icon: 'logo.svg',
   },
   {
     id: 9,
-    name: "Profile",
-    link: "/dan",
-    icon: "profile.svg",
+    name: 'Profile',
+    link: '/tmp',
+    icon: 'profile.svg',
   },
   {
     id: 10,
-    name: "More",
-    link: "/",
-    icon: "more.svg",
+    name: 'More',
+    link: '/',
+    icon: 'more.svg',
   },
 ];
 
-export const LeftBar = () => {
+export const LeftBar = async () => {
+  const currentUser = await serverGetCurrentUser();
+
+  menuList[8].link = `/${currentUser?.account?.username}`;
+
   return (
     <div className="h-screen sticky top-0 flex flex-col justify-between pt-2 pb-8">
       {/* LOGO + MENU SECTION */}
@@ -113,10 +118,12 @@ export const LeftBar = () => {
       {/* USER */}
       <div className="flex items-center justify-between">
         <div className="flex items-center gap-2">
-          <Avatar />
+          <Avatar path={currentUser?.img} />
           <div className="xxl:flex hidden flex-col">
-            <span className="font-bold">Dang Pham</span>
-            <span className="text-sm text-textGray">@Dante__hehe</span>
+            <span className="font-bold">{currentUser?.displayName}</span>
+            <span className="text-sm text-textGray">
+              @{currentUser?.account?.username}
+            </span>
           </div>
         </div>
         <div className="xxl:block hidden cursor-pointer font-bold">...</div>

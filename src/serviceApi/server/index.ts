@@ -1,4 +1,5 @@
 'use server';
+import { decodeToken } from '@/helpers/server/tokenManagement';
 import axios, { AxiosError } from 'axios';
 import { cookies } from 'next/headers';
 
@@ -40,10 +41,15 @@ export const getServerApi = async () => {
 };
 
 // Helper function to handle unauthorized errors and redirect
-export async function fetchWithAuth<T>(fetchFn: () => Promise<T>): Promise<T> {
+export async function fetchWithAuth<T>(
+  fetchFn: (tokenBody: any) => Promise<T>,
+): Promise<T> {
   try {
-    return await fetchFn();
+    const tokenBody = decodeToken();
+    if (!tokenBody) throw new Error('UNAUTHORIZED');
+    return await fetchFn(tokenBody);
   } catch (error) {
+    console.log(error);
     throw new Error('UNAUTHORIZED');
   }
 }

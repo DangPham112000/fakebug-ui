@@ -1,9 +1,11 @@
+'use server';
 import ErrorBoundary from '@/components/ErrorBoundary';
 import { Feed } from '@/components/Feed';
 import Image from '@/components/Image';
-import { serverfetchUser } from '@/serviceApi/server/userService';
+import { serverFetchUserByUsername } from '@/serviceApi/server/userService';
 import Link from 'next/link';
 import React from 'react';
+import { format } from 'timeago.js';
 
 type Props = {
   params: Promise<{
@@ -14,7 +16,7 @@ type Props = {
 const UserPage = async ({ params }: Props) => {
   const { username } = await params;
 
-  const user = await serverfetchUser(username);
+  const user = await serverFetchUserByUsername(username);
   if (!user) return <ErrorBoundary error={new Error('No user found')} />;
 
   return (
@@ -24,7 +26,7 @@ const UserPage = async ({ params }: Props) => {
         <Link href={'/'}>
           <Image path="icons/back.svg" alt="back" w={24} h={24} />
         </Link>
-        <h1 className="font-bold text-lg">Dang Pham</h1>
+        <h1 className="font-bold text-lg">{user?.displayName}</h1>
       </div>
       {/* Info */}
       <div className="">
@@ -32,12 +34,18 @@ const UserPage = async ({ params }: Props) => {
         <div className="relative w-full">
           {/* Cover */}
           <div className="w-full aspect-[3/1] overflow-hidden flex items-center">
-            <Image path="test/post.jpeg" alt="" w={600} h={200} tr={true} />
+            <Image
+              path={user?.cover || '/test/post.jpeg'}
+              alt=""
+              w={600}
+              h={200}
+              tr={true}
+            />
           </div>
           {/* Avatar */}
           <div className="w-1/5 aspect-square rounded-full overflow-hidden border-4 border-black absolute left-4 -translate-y-1/2">
             <Image
-              path="test/avatar.png"
+              path={user?.img || '/test/avatar.png'}
               alt="avatar"
               w={150}
               h={150}
@@ -66,10 +74,12 @@ const UserPage = async ({ params }: Props) => {
         <div className="p-4 flex flex-col gap-2">
           {/* Username */}
           <div className="">
-            <h1 className="text-2xl font-bold">Dang Pham</h1>
-            <span className="text-textGray text-sm">@dangpham__hehe</span>
+            <h1 className="text-2xl font-bold">{user?.displayName}</h1>
+            <span className="text-textGray text-sm">
+              @{user?.account?.username}
+            </span>
           </div>
-          <p>Dang Pham youtube channel</p>
+          <p>{user?.bio}</p>
           {/* Job & Location & Date */}
           <div className="flex gap-4 text-textGray text-[15px]">
             <div className="flex items-center gap-2">
@@ -79,21 +89,21 @@ const UserPage = async ({ params }: Props) => {
                 w={20}
                 h={20}
               />
-              <span>USA</span>
+              <span>{user?.location}</span>
             </div>
             <div className="flex items-center gap-2">
               <Image path="icons/date.svg" alt="date" w={20} h={20} />
-              <span>Joined April 2025</span>
+              <span>Joined {format(user?.createdAt)}</span>
             </div>
           </div>
           {/* Followings & Followers */}
           <div className="flex gap-4">
             <div className="flex items-center gap-2">
-              <span className="font-bold">100</span>
+              <span className="font-bold">{user?._count?.followings}</span>
               <span className="text-[15px] text-textGray">Followings</span>
             </div>
             <div className="flex items-center gap-2">
-              <span className="font-bold">200</span>
+              <span className="font-bold">{user?._count?.followers}</span>
               <span className="text-[15px] text-textGray">Followers</span>
             </div>
           </div>
