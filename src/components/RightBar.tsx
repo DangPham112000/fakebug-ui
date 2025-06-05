@@ -1,8 +1,8 @@
-import React from "react";
-import { Search } from "./Search";
-import { PopularTags } from "./PopularTags";
-import { Recommendations } from "./Recommendations";
-import Link from "next/link";
+import React from 'react';
+import { Search } from './Search';
+import { PopularTags } from './PopularTags';
+import { Recommendations } from './server/Recommendations';
+import Link from 'next/link';
 
 export const RightBar = () => {
   return (
@@ -11,12 +11,12 @@ export const RightBar = () => {
       <PopularTags />
       <Recommendations />
       <div className="flex flex-wrap gap-x-4 text-textGray text-sm">
-        <Link href={"/"}>Terms of Service</Link>
-        <Link href={"/"}>Privacy Policy</Link>
-        <Link href={"/"}>Cookie Policy</Link>
-        <Link href={"/"}>Accessibility</Link>
-        <Link href={"/"}>Ads info</Link>
-        <Link href={"/"}>More...</Link>
+        <Link href={'/'}>Terms of Service</Link>
+        <Link href={'/'}>Privacy Policy</Link>
+        <Link href={'/'}>Cookie Policy</Link>
+        <Link href={'/'}>Accessibility</Link>
+        <Link href={'/'}>Ads info</Link>
+        <Link href={'/'}>More...</Link>
         <span>© 2025 F Corp.</span>
       </div>
     </div>

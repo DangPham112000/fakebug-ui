@@ -1,11 +1,11 @@
 'use server';
+import FollowButton from '@/components/client/FollowButton';
 import ErrorBoundary from '@/components/ErrorBoundary';
 import { Feed } from '@/components/Feed';
 import Image from '@/components/Image';
 import { serverFetchUserByUsername } from '@/serviceApi/server/userService';
 import Link from 'next/link';
 import React from 'react';
-import { format } from 'timeago.js';
 
 type Props = {
   params: Promise<{
@@ -63,12 +63,7 @@ const UserPage = async ({ params }: Props) => {
           <div className="w-9 h-9 flex items-center justify-center rounded-full border-[1px] border-gray-500 cursor-pointer">
             <Image path="icons/message.svg" alt="message" w={20} h={20} />
           </div>
-          <button
-            type="button"
-            className="font-bold bg-white text-black cursor-pointer rounded-full py-2 px-4"
-          >
-            Follow
-          </button>
+          <FollowButton userId={user?.id} isFollowing={true} />
         </div>
         {/* User Details */}
         <div className="p-4 flex flex-col gap-2">
@@ -93,7 +88,13 @@ const UserPage = async ({ params }: Props) => {
             </div>
             <div className="flex items-center gap-2">
               <Image path="icons/date.svg" alt="date" w={20} h={20} />
-              <span>Joined {format(user?.createdAt)}</span>
+              <span>
+                Joined{' '}
+                {new Date(user?.createdAt.toString()).toLocaleDateString(
+                  'en-US',
+                  { month: 'long', year: 'numeric' },
+                )}
+              </span>
             </div>
           </div>
           {/* Followings & Followers */}
